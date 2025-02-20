@@ -28,7 +28,7 @@ from llm.tools.schemas import CustomBaseTool
 class FinanceAssistant:
     def __init__(
         self,
-        limit_history=10,
+        limit_history=20,
     ):
         """Initialize the Finance Assistant"""
         self.tools: list = [
@@ -60,7 +60,7 @@ class FinanceAssistant:
             streaming=True,
             cache=False,
             seed=0,
-        )
+        ).bind_tools(self.tools)
 
         self.prompt: str = self._load_prompt()
         self.conversation_history: Dict[str, list] = {}
@@ -135,14 +135,11 @@ class FinanceAssistant:
 
 
 async def main():
-    # Initialize detector once
     social_listening_assistant = FinanceAssistant()
 
-    # Prepare test data
     user_id = str(uuid4())
-    test_messages = [""]
+    test_messages = ["Giúp tôi lấy thông tin của công ty có mã cổ phiếu TCB"]
 
-    # Batch process messages
     for message in test_messages:
         print(f"User: {message}")
         print("Chatbot: ", end="")
